@@ -13,3 +13,6 @@ yotta_targets
 pxtapp
 buildcache.json
 *.pyc
+*.lock
+
+mrbapp.c
