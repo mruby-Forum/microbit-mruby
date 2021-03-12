@@ -1,64 +1,102 @@
-# microbit-v2-samples
+# micro:bit mruby
 
-This repository is provides the tooling needed to compile a C/C++ CODAL program for the micro:bit v2 and produce a HEX file that can be downloaded to the device.
+**micro:bit mruby**（以下microbit-mruby）は [BBC micro:bit](https://microbit.org/) で動作する [mruby](https://mruby.org/) 実行環境です。  
+mrubyは、人気の開発言語 [Ruby](https://www.ruby-lang.org/) を軽量化したプログラミング言語で、組込みシステムや様々なソフトウェアに組み込むことができる軽量なプログラミング言語です。
 
-## Raising Issues
-Any issues regarding the micro:bit are gathered on the [lancaster-university/codal-microbit-v2](https://github.com/lancaster-university/codal-microbit-v2) repository. Please raise yours there too.
+microbit-mruby は mruby 3.0 を搭載しており、micro:bit v2 マイコン上でmrubyアプリケーションを実行できる環境を提供します。
 
-# Installation
-You need some open source pre-requisites to build this repo. You can either install these tools yourself, or use the docker image provided below.
+microbit-mruby は、ランカスター大学が公開している [microbit-v2-samples](https://github.com/lancaster-university/microbit-v2-samples) をベースにして作成しました。
 
-- [GNU Arm Embedded Toolchain](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
-- [Github desktop](https://desktop.github.com/)
-- [CMake](https://cmake.org/download/)
-- [Python 3](https://www.python.org/downloads/)
+# microbit-mruby必要なもの
 
-We use Ubuntu Linux for most of our tests. You can also install these tools easily through the package manager:
+- micro:bit v2  
+  ※ v1では動作しません
+- Windows PC または Mac
 
-```
-    sudo apt install gcc
-    sudo apt install git
-    sudo apt install cmake
-    sudo apt install gcc-arm-none-eabi binutils-arm-none-eabi
-```
+# microbit-mruby環境構築
 
-## Yotta
-For backwards compatibility with [microbit-samples](https://github.com/lancaster-university/microbit-samples) users, we also provide a yotta target for this repository.
+## ビルド環境のセットアップ
 
-## Docker
-You can use the [Dockerfile](https://github.com/lancaster-university/microbit-v2-samples/blob/master/Dockerfile) provided to build the samples, or your own project sources, without installing additional dependencies.
+microbit-mrubyでは、以下のセットアップが必要です。
 
-Run the following command to build the image locally:
+- C言語開発環境 (gccなど)
+- Ruby (2.7以降を推奨)
+- git
+- Docker
 
-```
-    docker build -t microbit-tools .
-```
+## ソースコードの取得とビルド
 
-# Building
-- Clone this repository
-- In the root of this repository type `python build.py`
-- The hex file will be built `MICROBIT.HEX` and placed in the root folder.
+以下のコマンドを実行して、microbit-mrubyのソースコードを取得します。
 
-## Docker
-You can use the image you built previously to build the project sources in the current working directory (equivalent to executing `build.py`).
-
-```
-    docker run -v $(pwd):/app --rm microbit-tools
+```bash
+cd $WORKING_DIR
+git clone https://github.com/mruby-Forum/microbit-mruby.git
+cd microbit-mruby
+git clone https://github.com/mruby/mruby.git -b 3.0.0 --depth 1
 ```
 
-You can also provide additional arguments like `--clean`.
+- **$WORKING_DIR**には任意のディレクトリを指定してください。
 
+## Docker imageの作成（初回のみ）
+
+microbit-mrubyディレクトリ内で以下のコマンドを実行することで、micro:bitのビルド用のDockerイメージが作成されます。（Dockerイメージの作成には数分程度時間がかかります）  
+Dockerイメージの作成は一度実行するだけでOKです。
+
+```bash
+make docker
 ```
-    docker run -v $(pwd):/app --rm microbit-tools --clean
+
+## mrubyのビルド
+
+以下のコマンドでmrubyをビルドします。  
+mrubyのビルドはmrubyのライブラリ(mrbgems)を追加する場合には再度実行が必要ですが、通常は一度実行するだけでOKです。
+
+```bash
+cd mruby
+rake MRUBY_CONFIG=../microbit.rb
 ```
 
-# Developing
-You will find a simple main.cpp in the `source` folder which you can edit. CODAL will also compile any other C/C++ header files our source files with the extension `.h .c .cpp` it finds in the source folder.
+## microbit-mrubyのビルド
 
-The `samples` folder contains a number of simple sample programs that utilise you may find useful.
+microbit-mrubyディレクトリ内で、以下のコマンドを実行します。
 
-# Compatibility
-This repository is designed to follow the principles and APIs developed for the first version of the micro:bit. We have also included a compatibility layer so that the vast majority of C/C++ programs built using [microbit-dal](https://www.github.com/lancaster-university/microbit-dal) will operate with few changes.
+```bash
+make
+```
 
-# Documentation
-API documentation is embedded in the code using doxygen. We will produce integrated web-based documentation soon.
+ビルドが終了すると **MICROBIT.hex** が生成されます。
+
+## アプリケーションの実行
+
+USBケーブルで micro:bit を接続します。（micro:bitがディスクドライブとして認識されます）  
+micro:bitのドライブのルートディレクトリに MICROBIT.hex をコピーすると、microbit-mruby が起動され、mrubyアプリケーションが実行されます。  
+Githubリポジトリの[サンプルコード](mrbapp.rb)は、5x5のLEDの真ん中のLEDを使用したＬチカのソースコードになっています。
+
+### サンプルプログラムの実行イメージ
+
+※ 準備中
+
+---
+
+## mrubyでアプリケーションを作ってみよう
+
+microbit-mrubyで実行されるmrubyアプリケーションのソースコードは **mrbapp.rb** に記述します。  
+**mrbapp.rb** の内容を変更した場合は、上記の **microbit-mrubyのビルド** と **アプリケーションの実行** を実施してください。
+
+現状は、mrubyアプリケーションを変更した場合には、micro:bitのファームウェアと合わせてビルドされます。  
+今後、mrubyアプリケーションだけを変更できるように改善していく予定です。
+
+## 利用できるRuby(mruby)のクラス
+
+- Rubyの組み込みクラス
+- LEDクラス
+
+※ クラス仕様の詳細は準備中です
+
+micro:bitに搭載されているデバイスを利用するためのクラスは順次追加予定ですのでご期待ください。
+
+---
+
+# ライセンス
+
+本ソフトウェアはMITライセンスのもとで公開しています。[LICENSE](LICENSE)を参照してください。
