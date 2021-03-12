@@ -3,7 +3,7 @@
 **micro:bit mruby**（以下microbit-mruby）は [BBC micro:bit](https://microbit.org/) で動作する [mruby](https://mruby.org/) 実行環境です。  
 mrubyは、人気の開発言語 [Ruby](https://www.ruby-lang.org/) を軽量化したプログラミング言語で、組込みシステムや様々なソフトウェアに組み込むことができる軽量なプログラミング言語です。
 
-microbit-mruby は mruby 3.0 を搭載しており、micro:bit v2 マイコン上でmrubyアプリケーションを実行できる環境を提供します。
+microbit-mruby は mruby 3.0 を搭載しており、micro:bit v2 マイコン上でmrubyアプリケーションを実行できる環境を提供します。
 
 microbit-mruby は、ランカスター大学が公開している [microbit-v2-samples](https://github.com/lancaster-university/microbit-v2-samples) をベースにして作成しました。
 
