@@ -74,7 +74,7 @@ Githubリポジトリの[サンプルコード](mrbapp.rb)は、5x5のLEDの真�
 
 ### サンプルプログラムの実行イメージ
 
-![L-chika](https://github.com/mimaki/microbit-mruby/blob/image/img/microbit-mruby-lchika.jpg)
+![L-chika](https://github.com/mruby-Forum/microbit-mruby/blob/image/img/microbit-mruby-lchika.jpg)
 
 ---
 
