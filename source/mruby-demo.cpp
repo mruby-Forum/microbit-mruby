@@ -107,6 +107,16 @@ sleep(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
+static mrb_value
+dsp_scroll(mrb_state *mrb, mrb_value self)
+{
+  const char *str;
+  mrb_get_args(mrb, "z", &str);
+  uBit.display.scroll(str);
+  return self;
+}
+
+
 #ifndef MRB_NO_GEMS
 void
 mrb_init_mrbgems(mrb_state *mrb)
@@ -117,6 +127,9 @@ mrb_init_mrbgems(mrb_state *mrb)
   mrb_define_method(mrb, led, "initialize", led_init, MRB_ARGS_ARG(1, 1));
   mrb_define_method(mrb, led, "on", led_on, MRB_ARGS_NONE());
   mrb_define_method(mrb, led, "off", led_off, MRB_ARGS_NONE());
+
+  struct RClass *dsp = mrb_define_class(mrb, "Display", mrb->object_class);
+  mrb_define_class_method(mrb, dsp, "scroll", dsp_scroll, MRB_ARGS_REQ(1));
 
   mrb_define_method(mrb, mrb->kernel_module, "delay", delay, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, mrb->kernel_module, "sleep", sleep, MRB_ARGS_REQ(1));
