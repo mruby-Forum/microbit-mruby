@@ -10,7 +10,7 @@
 
 (micro:bit mruby is available on microbic:bit v2 only.)
 
-microbit-mruby is developed by using [microbit-v2-samples](https://github.com/lancaster-university/microbit-v2-samples) 
+microbit-mruby is developed by using [microbit-v2-samples](https://github.com/lancaster-university/microbit-v2-samples) of Lancaster University
 
 # Prerequisites
 To compile microbit-mruby out of the source code you need the following tools:
