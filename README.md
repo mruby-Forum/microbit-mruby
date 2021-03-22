@@ -64,7 +64,7 @@ Copy the  MICROBIT.hex to the micro:bit folder, microbit-mruby will be launched 
 
 ## Create mruby application
 
-The source code of the mruby application executed by microbit-mruby should be described in ** mrbapp.rb **.
+The source code of the mruby application executed by microbit-mruby should be described in **mrbapp.rb**.
 If you have changed the contents of **mrbapp.rb**, please execute the above **build microbit-mruby** and **run the application** .
 
 Note:If you change the mruby application, the micro: bit firmware will be built again
