@@ -55,7 +55,7 @@ When the build is completed successfully , **MICROBIT.hex**  will be generated.
 
 ## Run the application
 Connect to the Micro:bit via USB cable ,then Micro:bit will be appeared as a folder.
-Copy the  MICROBIT.hex to the micro:bit folder, microbit-mruby will be launched and runs the LED lightning application  [Lightnig LED sample cord](mrbapp.rb)
+Copy the  MICROBIT.hex to the micro:bit folder, microbit-mruby will be launched and runs the LED lightning application  [Lightnig LED sample code](mrbapp.rb)
 
 ### Picture of lightnig LED application
 
