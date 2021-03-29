@@ -1,8 +1,5 @@
-# L-chika
-led = LED.new(3, 3)
+# Hello, mruby!
 loop {
-  led.on
-  delay(500)
-  led.off
-  delay(500)
+  Display.scroll('Hello, mruby!');
+  delay(1000);
 }
