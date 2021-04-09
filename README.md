@@ -42,6 +42,8 @@ You need to genarate the docker image for building microbit -mruby and it will t
 ```bash
 cd mruby
 rake MRUBY_CONFIG=../microbit.rb
+cd ..
+ruby make-mruby-source.rb
 ```
 Note: The mruby build needs to be executed again when adding the mruby library (mrbgems)
 

@@ -54,6 +54,8 @@ mrubyのビルドはmrubyのライブラリ(mrbgems)を追加する場合には�
 ```bash
 cd mruby
 rake MRUBY_CONFIG=../microbit.rb
+cd ..
+ruby make-mruby-source.rb
 ```
 
 ## microbit-mrubyのビルド
