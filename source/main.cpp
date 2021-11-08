@@ -1,6 +1,7 @@
 #include "MicroBit.h"
 #include "mruby.h"
 #include "mruby/dump.h"
+#include "mruby/_string.h"
 
 #define MBB_BASE_ADDR   0x00060000
 
@@ -34,7 +35,8 @@ main()
 
     mrb_load_irep(mrb, bin);
     if (mrb->exc) {
-        uBit.serial.printf("mrb_load_irep(): Exception occured.\n");
+        mrb_value val = mrb_funcall(mrb, mrb_obj_value(mrb->exc), "inspect", 0);
+        uBit.serial.printf("%s\n", mrb_str_to_cstr(mrb, val));
     }
 
     mrb_close(mrb);
