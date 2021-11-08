@@ -2,6 +2,7 @@
 #include "NRF52Pin.h"
 #include "mruby.h"
 #include "mruby/variable.h"
+#include "mruby/array.h"
 
 extern MicroBit uBit;
 
@@ -116,6 +117,69 @@ dsp_scroll(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+static mrb_value
+accel_get(mrb_state *mrb, mrb_value self)
+{
+  mrb_int x = uBit.accelerometer.getX();
+  mrb_int y = uBit.accelerometer.getY();
+  mrb_int z = uBit.accelerometer.getZ();
+  uBit.serial.printf("acceler [%d, %d, %d]\n", x, y, z);
+  mrb_value ary = mrb_ary_new_capa(mrb, 3);
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(x));
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(y));
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(z));
+  return ary;
+}
+
+static mrb_value
+accel_x(mrb_state *mrb, mrb_value self)
+{
+  return mrb_fixnum_value(uBit.accelerometer.getX());
+}
+
+static mrb_value
+accel_y(mrb_state *mrb, mrb_value self)
+{
+  return mrb_fixnum_value(uBit.accelerometer.getY());
+}
+
+static mrb_value
+accel_z(mrb_state *mrb, mrb_value self)
+{
+  return mrb_fixnum_value(uBit.accelerometer.getZ());
+}
+
+static mrb_value
+compass_get(mrb_state *mrb, mrb_value self)
+{
+  mrb_int x = uBit.compass.getX();
+  mrb_int y = uBit.compass.getY();
+  mrb_int z = uBit.compass.getZ();
+  uBit.serial.printf("Compass [%d, %d, %d]\n", x, y, z);
+  mrb_value ary = mrb_ary_new_capa(mrb, 3);
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(x));
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(y));
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(x));
+  return ary;
+}
+
+static mrb_value
+compass_x(mrb_state *mrb, mrb_value self)
+{
+  return mrb_fixnum_value(uBit.compass.getX());
+}
+
+static mrb_value
+compass_y(mrb_state *mrb, mrb_value self)
+{
+  return mrb_fixnum_value(uBit.compass.getY());
+}
+
+static mrb_value
+compass_z(mrb_state *mrb, mrb_value self)
+{
+  return mrb_fixnum_value(uBit.compass.getZ());
+}
 
 #ifndef MRB_NO_GEMS
 void
@@ -123,16 +187,33 @@ mrb_init_mrbgems(mrb_state *mrb)
 {
   mbprintf("mrb_init_mrbgems() start.\n");
 
+  // LED class
   struct RClass *led = mrb_define_class(mrb, "LED", mrb->object_class);
   mrb_define_method(mrb, led, "initialize", led_init, MRB_ARGS_ARG(1, 1));
   mrb_define_method(mrb, led, "on", led_on, MRB_ARGS_NONE());
   mrb_define_method(mrb, led, "off", led_off, MRB_ARGS_NONE());
 
+  // Display class
   struct RClass *dsp = mrb_define_class(mrb, "Display", mrb->object_class);
   mrb_define_class_method(mrb, dsp, "scroll", dsp_scroll, MRB_ARGS_REQ(1));
 
+  // Kernel function
   mrb_define_method(mrb, mrb->kernel_module, "delay", delay, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, mrb->kernel_module, "sleep", sleep, MRB_ARGS_REQ(1));
+
+  // Accelerometer class
+  struct RClass *acc = mrb_define_class(mrb, "Accelerometer", mrb->object_class);
+  mrb_define_method(mrb, acc, "get", accel_get, MRB_ARGS_NONE());
+  mrb_define_method(mrb, acc, "x", accel_x, MRB_ARGS_NONE());
+  mrb_define_method(mrb, acc, "y", accel_y, MRB_ARGS_NONE());
+  mrb_define_method(mrb, acc, "z", accel_z, MRB_ARGS_NONE());
+
+  // Compass class
+  struct RClass *cmp = mrb_define_class(mrb, "Compass", mrb->object_class);
+  mrb_define_method(mrb, cmp, "get", compass_get, MRB_ARGS_NONE());
+  mrb_define_method(mrb, cmp, "x", compass_x, MRB_ARGS_NONE());
+  mrb_define_method(mrb, cmp, "y", compass_y, MRB_ARGS_NONE());
+  mrb_define_method(mrb, cmp, "z", compass_z, MRB_ARGS_NONE());
 
   // mrb_define_method(mrb, mrb->object_class, "ppp", ppp, MRB_ARGS_REQ(1));
 
