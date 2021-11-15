@@ -155,7 +155,7 @@ compass_get(mrb_state *mrb, mrb_value self)
   mrb_int x = uBit.compass.getX();
   mrb_int y = uBit.compass.getY();
   mrb_int z = uBit.compass.getZ();
-  uBit.serial.printf("Compass [%d, %d, %d]\n", x, y, z);
+  // uBit.serial.printf("Compass [%d, %d, %d]\n", x, y, z);
   mrb_value ary = mrb_ary_new_capa(mrb, 3);
   mrb_ary_push(mrb, ary, mrb_fixnum_value(x));
   mrb_ary_push(mrb, ary, mrb_fixnum_value(y));
@@ -181,9 +181,23 @@ compass_z(mrb_state *mrb, mrb_value self)
   return mrb_fixnum_value(uBit.compass.getZ());
 }
 
+static mrb_value
+mrb_stdout_putc(mrb_state *mrb, mrb_value self)
+{
+  char *str;
+  size_t len;
+  char cz[2] = {0, 0};
+  mrb_get_args(mrb, "s", &str, &len);
+  if (len > 0) {
+    cz[0] = *str;
+    uBit.serial.printf("%s", cz);
+  }
+  return mrb_fixnum_value(cz[0]);
+}
+
 #ifndef MRB_NO_GEMS
 void
-mrb_init_mrbgems(mrb_state *mrb)
+mrb_init_mrbgems2(mrb_state *mrb)
 {
   mbprintf("mrb_init_mrbgems() start.\n");
 
@@ -214,6 +228,9 @@ mrb_init_mrbgems(mrb_state *mrb)
   mrb_define_method(mrb, cmp, "x", compass_x, MRB_ARGS_NONE());
   mrb_define_method(mrb, cmp, "y", compass_y, MRB_ARGS_NONE());
   mrb_define_method(mrb, cmp, "z", compass_z, MRB_ARGS_NONE());
+
+  struct RClass *cout = mrb_define_class(mrb, "STDOUT", mrb->object_class);
+  mrb_define_class_method(mrb, cout,  "putc", mrb_stdout_putc, MRB_ARGS_REQ(1));
 
   // mrb_define_method(mrb, mrb->object_class, "ppp", ppp, MRB_ARGS_REQ(1));
 

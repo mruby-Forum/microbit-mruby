@@ -13,6 +13,9 @@ MRuby::CrossBuild.new("microbit") do |conf|
   # conf.gem :github => 'mattn/mruby-onig-regexp'
   # conf.gem :git => 'git@github.com:mattn/mruby-onig-regexp.git', :branch => 'master', :options => '-v'
 
+  conf.gem :core => 'mruby-string-ext'
+  conf.gem :git => 'git://github.com/mimaki/mruby-stdio.git'
+
   # include the GEM box
   # conf.gembox 'default'
 

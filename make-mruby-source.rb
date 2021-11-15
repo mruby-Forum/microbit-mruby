@@ -1,5 +1,9 @@
 require 'fileutils'
 
+CORE_GEMS = %w(
+  mruby-string-ext
+)
+
 SRC_ROOT = File.join('.', 'mruby')
 DST_ROOT = File.join('source', 'mruby')
 SRC_BUILD = File.join(SRC_ROOT, 'build', 'microbit')
@@ -19,6 +23,39 @@ FileUtils.cp_r File.join(SRC_BUILD, 'include'), DST_ROOT
 mrblib_dir = File.join(DST_ROOT, 'mrblib')
 FileUtils.mkdir_p mrblib_dir
 FileUtils.cp File.join(SRC_BUILD, 'mrblib', 'mrblib.c'), mrblib_dir
+
+# copy external mrbgems
+
+# mruby/build/microbit/mrbgems/*.c
+mrbgems = Dir.glob(File.join(SRC_BUILD, 'mrbgems', '*.c')).map {|mgem|
+  ['', mgem]
+}
+
+# mruby/build/microbit/mrbgems/mruby-xxxx/*.c
+Dir.glob(File.join(SRC_BUILD, 'mrbgems', '*', '*.c')).each {|mgem|
+  mrbgems << [mgem.split('/')[-2], mgem]
+}
+
+# mruby/build/repos/microbit/mruby-xxxx/src/*.c
+Dir.glob(File.join(SRC_ROOT, 'build', 'repos', 'microbit', '*', 'src', '*.c')).each {|mgem|
+  mrbgems << [mgem.split('/')[-3], mgem]
+}
+
+# mruby/mrbgems/mruby-xxxx/src/*.c
+CORE_GEMS.each {|coremgem|
+  Dir.glob(File.join(SRC_ROOT, 'mrbgems', coremgem, 'src', '*.c')).each {|mgems|
+    mrbgems << [coremgem, mgems]
+  }
+}
+
+# copy mrbgems sources
+mgem_src_dir = File.join(DST_ROOT, 'src', 'mrbgems')
+FileUtils.mkdir_p mgem_src_dir
+mrbgems.each {|mgem|
+  dst_dir = File.join(mgem_src_dir, mgem[0])
+  FileUtils.mkdir_p(dst_dir) if mgem[0].length > 0
+  FileUtils.cp mgem[1], dst_dir
+}
 
 # rename string.h to _string.h
 FileUtils.mv File.join(DST_ROOT, 'include', 'mruby', 'string.h'), File.join(DST_ROOT, 'include', 'mruby', '_string.h')

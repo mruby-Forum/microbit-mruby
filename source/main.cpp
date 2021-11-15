@@ -7,6 +7,10 @@
 
 MicroBit uBit;
 
+extern "C" {
+    void mrb_init_mrbgems2(mrb_state *mrb);
+}
+
 int 
 main()
 {
@@ -22,6 +26,11 @@ main()
     }
     uBit.serial.printf("mrb_open() done.\n");
     uBit.serial.printf(msg);
+
+    // init libraries for micro:bit
+    int ai = mrb_gc_arena_save(mrb);
+    mrb_init_mrbgems2(mrb);
+    mrb_gc_arena_restore(mrb, ai);
 
     uBit.init();
 
