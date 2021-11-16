@@ -22,9 +22,9 @@ main()
 
     mrb_state *mrb = mrb_open();
     if (mrb) {
-        msg = "Hello, mruby!\n";
+        msg = "Hello, microbit-mruby!\n";
     }
-    uBit.serial.printf("mrb_open() done.\n");
+    // uBit.serial.printf("mrb_open() done.\n");
     uBit.serial.printf(msg);
 
     // init libraries for micro:bit
@@ -38,9 +38,9 @@ main()
         uBit.serial.printf("Invalid MRB!\n");
         bin = (uint8_t*)appbin;
     }
-    else {
-        uBit.serial.printf("Flash binary is OK!\n");
-    }
+    // else {
+    //     uBit.serial.printf("Flash binary is OK!\n");
+    // }
 
     mrb_load_irep(mrb, bin);
     if (mrb->exc) {
@@ -49,7 +49,7 @@ main()
     }
 
     mrb_close(mrb);
-    uBit.serial.printf("mrb_close() done.\n");
+    uBit.serial.printf("mruby VM closed.\n");
 
     // while(1)
     //     uBit.display.scroll("HELLO WORLD!");

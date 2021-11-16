@@ -118,13 +118,43 @@ dsp_scroll(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+// volatile mrb_int shakecount = 0;
+
+// static void
+// onShake(MicroBitEvent)
+// {
+//   shakecount++;
+//   uBit.sleep(20);
+// }
+
+// static void
+// resetShake()
+// {
+//   shakecount = 0;
+// }
+
+// static mrb_value
+// accel_init(mrb_state *mrb, mrb_value self)
+// {
+//   resetShake();
+//   uBit.messageBus.listen(MICROBIT_ID_GESTURE, MICROBIT_ACCELEROMETER_EVT_SHAKE, onShake);
+//   return self;
+// }
+
+// static mrb_value
+// accel_reset(mrb_state *mrb, mrb_value self)
+// {
+//   resetShake();
+//   return mrb_nil_value();
+// }
+
 static mrb_value
 accel_get(mrb_state *mrb, mrb_value self)
 {
   mrb_int x = uBit.accelerometer.getX();
   mrb_int y = uBit.accelerometer.getY();
   mrb_int z = uBit.accelerometer.getZ();
-  uBit.serial.printf("acceler [%d, %d, %d]\n", x, y, z);
+  // uBit.serial.printf("acceler [%d, %d, %d]\n", x, y, z);
   mrb_value ary = mrb_ary_new_capa(mrb, 3);
   mrb_ary_push(mrb, ary, mrb_fixnum_value(x));
   mrb_ary_push(mrb, ary, mrb_fixnum_value(y));
@@ -149,6 +179,12 @@ accel_z(mrb_state *mrb, mrb_value self)
 {
   return mrb_fixnum_value(uBit.accelerometer.getZ());
 }
+
+// static mrb_value
+// accel_count(mrb_state *mrb, mrb_value self)
+// {
+//   return mrb_fixnum_value(shakecount);
+// }
 
 static mrb_value
 compass_get(mrb_state *mrb, mrb_value self)
@@ -218,10 +254,13 @@ mrb_init_mrbgems2(mrb_state *mrb)
 
   // Accelerometer class
   struct RClass *acc = mrb_define_class(mrb, "Accelerometer", mrb->object_class);
+  // mrb_define_method(mrb, acc, "initialize", accel_init, MRB_ARGS_NONE());
+  // mrb_define_method(mrb, acc, "reset", accel_reset, MRB_ARGS_NONE());
   mrb_define_method(mrb, acc, "get", accel_get, MRB_ARGS_NONE());
   mrb_define_method(mrb, acc, "x", accel_x, MRB_ARGS_NONE());
   mrb_define_method(mrb, acc, "y", accel_y, MRB_ARGS_NONE());
   mrb_define_method(mrb, acc, "z", accel_z, MRB_ARGS_NONE());
+  // mrb_define_method(mrb, acc, "count", accel_count, MRB_ARGS_NONE());
 
   // Compass class
   struct RClass *cmp = mrb_define_class(mrb, "Compass", mrb->object_class);
