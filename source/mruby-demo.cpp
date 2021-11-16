@@ -69,7 +69,7 @@ led_on(mrb_state *mrb, mrb_value self)
   uBit.serial.printf("LED[%d, %d].on\n", x, y);
 
   set_io_row(y, 1);
-  set_io_col(x, 1);
+  set_io_col(x, 0);
 
   return self;
 }
@@ -85,7 +85,8 @@ led_off(mrb_state *mrb, mrb_value self)
   uBit.serial.printf("LED[%d, %d].off\n", x, y);
 
   set_io_row(y, 1);
-  set_io_col(x, 0);
+  set_io_col(x, 1);
+  set_io_row(y, 0);
 
   return self;
 }
@@ -159,7 +160,7 @@ compass_get(mrb_state *mrb, mrb_value self)
   mrb_value ary = mrb_ary_new_capa(mrb, 3);
   mrb_ary_push(mrb, ary, mrb_fixnum_value(x));
   mrb_ary_push(mrb, ary, mrb_fixnum_value(y));
-  mrb_ary_push(mrb, ary, mrb_fixnum_value(x));
+  mrb_ary_push(mrb, ary, mrb_fixnum_value(z));
   return ary;
 }
 
